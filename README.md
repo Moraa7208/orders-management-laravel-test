@@ -1,4 +1,4 @@
-# Micro-CRM API - Test Task - По русский внизу
+# Micro-CRM API - Test Task - Русская версия ниже
 
 This Laravel application was developed as a test task to implement a micro-CRM API for managing products, warehouses, orders, and stock movements.
 
