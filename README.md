@@ -1,61 +1,268 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Micro-CRM API - Test Task - По русский внизу
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This Laravel application was developed as a test task to implement a micro-CRM API for managing products, warehouses, orders, and stock movements.
 
-## About Laravel
+## Core Requirements Implemented:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**Part 1: Order Management & Stock Control**
+* View warehouses and products (with stock levels).
+* Create, list (with filters/pagination), update, complete, cancel, and resume orders.
+* Automatic stock deduction/return upon order operations.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Part 2: Stock Movement History**
+* Tracks all changes to product stock.
+* API endpoint to view stock movement history with filters (warehouse, product, dates) and pagination.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Part 3: Test Data Seeding**
+* Console command to populate initial data for products, warehouses, and stocks.
 
-## Learning Laravel
+## Quick Setup & Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/Moraa7208/orders-management-laravel-test.git
+    ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+2.  **Install dependencies:**
+    ```bash
+    composer install
+    ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3.  **Environment Setup:**
+    * Copy `.env.example` to `.env`: `cp .env.example .env`
+    * Generate app key: `php artisan key:generate`
+    * Configure your database connection details (DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD) in the `.env` file.
 
-## Laravel Sponsors
+4.  **Database Migrations:**
+    ```bash
+    php artisan migrate
+    ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+5.  **Seed Test Data (Task 3):**
+    This command populates products, warehouses, and initial stock levels.
+    ```bash
+    php artisan app:seed-test-data
+    ```
 
-### Premium Partners
+6.  **Run the development server:**
+    ```bash
+    php artisan serve
+    ```
+    The API will typically be available at `http://localhost:8000/api/`.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## API Endpoints to Test
 
-## Contributing
+Here are the key API endpoints corresponding to the task requirements. Use a tool like Postman or `curl` for testing. (Default prefix is `/api`)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1.  **View list of warehouses**
+    * **Method:** `GET`
+    * **Endpoint:** `/warehouses`
 
-## Code of Conduct
+2.  **View list of products with their stock levels per warehouse**
+    * **Method:** `GET`
+    * **Endpoint:** `/products`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3.  **Get list of orders (supports pagination & filters)**
+    * **Method:** `GET`
+    * **Endpoint:** `/orders`
+    * *Example filters (add as query parameters): `?status=active`, `?customer=John`, `?page=2`*
 
-## Security Vulnerabilities
+4.  **Create an order**
+    * **Method:** `POST`
+    * **Endpoint:** `/orders`
+    * **Example Body:**
+        ```json
+        {
+            "customer": "New Customer",
+            "warehouse_id": 1,
+            "items": [
+                { "product_id": 1, "count": 2 },
+                { "product_id": 2, "count": 1 }
+            ]
+        }
+        ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5.  **Update an order (customer info and items)**
+    * **Method:** `PUT` or `PATCH`
+    * **Endpoint:** `/orders/{order_id}`
+    * **Example Body (to update customer and one item's count):**
+        ```json
+        {
+            "customer": "Updated Customer Name",
+            "items": [
+                { "product_id": 1, "count": 3 } // Assuming product_id 1 was in the order
+            ]
+        }
+        ```
 
-## License
+6.  **Complete an order**
+    * **Method:** `PATCH`
+    * **Endpoint:** `/orders/{order_id}/complete`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+7.  **Cancel an order**
+    * **Method:** `PATCH`
+    * **Endpoint:** `/orders/{order_id}/cancel`
+
+8.  **Resume an order**
+    * **Method:** `PATCH`
+    * **Endpoint:** `/orders/{order_id}/resume`
+    * *(Ensure stock availability is checked before resuming)*
+
+9.  **View stock movement history (supports filters & pagination)**
+    * **Method:** `GET`
+    * **Endpoint:** `/stock-movements`
+    * *Example filters: `?product_id=1`, `?warehouse_id=1`, `?date_from=YYYY-MM-DD`*
+
+10. **(Optional/Helper) Manual Stock Adjustment**
+    * **Method:** `POST`
+    * **Endpoint:** `/manual-adjustment`
+    * **Example Body:**
+        ```json
+        {
+            "product_id": 1,
+            "warehouse_id": 1,
+            "quantity_change": 5,
+            "reason": "Initial stock setup"
+        }
+        ```
+
+**Note:**
+* Replace `{order_id}` with an actual ID of an order.
+* All POST/PUT/PATCH requests should include `Content-Type: application/json` and `Accept: application/json` headers.
+* Error handling (e.g., insufficient stock, item not found) should return appropriate HTTP status codes and error messages.
+
+---
+---
+
+# Micro-CRM API - Тестовое Задание (на русском)
+
+Это приложение на Laravel было разработано в качестве тестового задания для реализации API микро-CRM для управления товарами, складами, заказами и движением товаров.
+
+## Реализованные Основные Требования:
+
+**Часть 1: Управление Заказами и Контроль Остатков**
+* Просмотр складов и товаров (с уровнем остатков).
+* Создание, просмотр списка (с фильтрами/пагинацией), обновление, завершение, отмена и возобновление заказов.
+* Автоматическое списание/возврат товаров на склад при операциях с заказами.
+
+**Часть 2: История Движения Товаров**
+* Отслеживание всех изменений остатков товаров.
+* API-метод для просмотра истории движения товаров с фильтрами (по складу, товару, датам) и пагинацией.
+
+**Часть 3: Наполнение Тестовыми Данными**
+* Консольная команда для заполнения начальных данных по товарам, складам и остаткам.
+
+## Быстрая Настройка и Установка
+
+1.  **Клонируйте репозиторий:**
+    ```bash
+    git clone https://github.com/Moraa7208/orders-management-laravel-test.git
+    ```
+
+2.  **Установите зависимости:**
+    ```bash
+    composer install
+    ```
+
+3.  **Настройка Окружения:**
+    * Скопируйте `.env.example` в `.env`: `cp .env.example .env`
+    * Сгенерируйте ключ приложения: `php artisan key:generate`
+    * Настройте данные для подключения к вашей базе данных (DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD) в файле `.env`.
+
+4.  **Миграции Базы Данных:**
+    ```bash
+    php artisan migrate
+    ```
+
+5.  **Наполнение Тестовыми Данными (Задача 3):**
+    Эта команда заполняет таблицы товаров, складов и начальные остатки.
+    ```bash
+    php artisan app:seed-test-data
+    ```
+
+6.  **Запустите сервер для разработки:**
+    ```bash
+    php artisan serve
+    ```
+    API обычно будет доступен по адресу `http://localhost:8000/api/`.
+
+## API-методы для Тестирования
+
+Ниже приведены ключевые API-методы, соответствующие требованиям задания. Используйте инструменты, такие как Postman или `curl`, для тестирования. (Префикс по умолчанию `/api`)
+
+1.  **Просмотреть список складов**
+    * **Метод:** `GET`
+    * **Endpoint:** `/warehouses`
+
+2.  **Просмотреть список товаров с их остатками по складам**
+    * **Метод:** `GET`
+    * **Endpoint:** `/products`
+
+3.  **Получить список заказов (поддерживает пагинацию и фильтры)**
+    * **Метод:** `GET`
+    * **Endpoint:** `/orders`
+    * *Примеры фильтров (добавляются как query-параметры): `?status=active`, `?customer=Иван`, `?page=2`*
+
+4.  **Создать заказ**
+    * **Метод:** `POST`
+    * **Endpoint:** `/orders`
+    * **Пример тела запроса:**
+        ```json
+        {
+            "customer": "Новый Клиент",
+            "warehouse_id": 1,
+            "items": [
+                { "product_id": 1, "count": 2 },
+                { "product_id": 2, "count": 1 }
+            ]
+        }
+        ```
+
+5.  **Обновить заказ (данные клиента и список позиций)**
+    * **Метод:** `PUT` или `PATCH`
+    * **Endpoint:** `/orders/{order_id}`
+    * **Пример тела запроса (обновить имя клиента и количество одного товара):**
+        ```json
+        {
+            "customer": "Обновленное Имя Клиента",
+            "items": [
+                { "product_id": 1, "count": 3 } // Предполагая, что товар с product_id 1 был в заказе
+            ]
+        }
+        ```
+
+6.  **Завершить заказ**
+    * **Метод:** `PATCH`
+    * **Endpoint:** `/orders/{order_id}/complete`
+
+7.  **Отменить заказ**
+    * **Метод:** `PATCH`
+    * **Endpoint:** `/orders/{order_id}/cancel`
+
+8.  **Возобновить заказ**
+    * **Метод:** `PATCH`
+    * **Endpoint:** `/orders/{order_id}/resume`
+    * *(Перед возобновлением убедитесь в наличии товара на складе)*
+
+9.  **Просмотр историй изменения остатков товаров (поддерживает фильтры и пагинацию)**
+    * **Метод:** `GET`
+    * **Endpoint:** `/stock-movements`
+    * *Примеры фильтров: `?product_id=1`, `?warehouse_id=1`, `?date_from=YYYY-MM-DD`*
+
+10. **(Опционально/Вспомогательное) Ручная Корректировка Остатков**
+    * **Метод:** `POST`
+    * **Endpoint:** `/manual-adjustment`
+    * **Пример тела запроса:**
+        ```json
+        {
+            "product_id": 1,
+            "warehouse_id": 1,
+            "quantity_change": 5,
+            "reason": "Начальная установка остатков"
+        }
+        ```
+
+**Примечание:**
+* Замените `{order_id}` на фактический ID заказа.
+* Все POST/PUT/PATCH запросы должны включать заголовки `Content-Type: application/json` и `Accept: application/json`.
+* Обработка ошибок (например, недостаточно товара, товар не найден) должна возвращать соответствующие HTTP-коды состояния и сообщения об ошибках.
